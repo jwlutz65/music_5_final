@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import WaveSurfer from 'wavesurfer.js';
-import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.js';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { WaveRegion } from '../lib/types';
 
@@ -12,89 +10,101 @@ interface RecordPlayerProps {
 }
 
 /**
- * RecordPlayer component combines WaveSurfer waveform with a stylized vinyl record animation
+ * RecordPlayer component with fallback audio support
  * Features clickable regions, play/pause controls, and detailed region descriptions
  */
 export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotations }) => {
   const waveformRef = useRef<HTMLDivElement>(null);
-  const wavesurferRef = useRef<WaveSurfer | null>(null);
-  const regionsRef = useRef<RegionsPlugin | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState<WaveRegion | null>(null);
+  const [audioError, setAudioError] = useState<string | null>(null);
+  const [useWaveSurfer, setUseWaveSurfer] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
-    if (!waveformRef.current) return;
+    const initializeAudio = async () => {
+      setIsLoading(true);
+      setAudioError(null);
 
-    // Initialize regions plugin
-    const regions = RegionsPlugin.create();
-    regionsRef.current = regions;
+      // First try to load with basic HTML5 audio to test file accessibility
+      if (audioRef.current) {
+        audioRef.current.src = audioUrl;
+        
+        const handleLoadedData = () => {
+          console.log('HTML5 audio loaded successfully');
+          setDuration(audioRef.current?.duration || 0);
+          setIsLoading(false);
+        };
 
-    // Initialize WaveSurfer
-    const wavesurfer = WaveSurfer.create({
-      container: waveformRef.current,
-      waveColor: '#ff4500',
-      progressColor: '#cc3700',
-      height: 100,
-      normalize: true,
-      plugins: [regions],
-    });
+        const handleError = (e: Event) => {
+          console.error('HTML5 audio error:', e);
+          setAudioError('Audio file could not be loaded. Please check the file path.');
+          setIsLoading(false);
+        };
 
-    wavesurferRef.current = wavesurfer;
+        const handleTimeUpdate = () => {
+          setCurrentTime(audioRef.current?.currentTime || 0);
+        };
 
-    // Load audio
-    wavesurfer.load(audioUrl);
+        const handlePlay = () => setIsPlaying(true);
+        const handlePause = () => setIsPlaying(false);
 
-    // Event listeners
-    wavesurfer.on('ready', () => {
-      setIsLoading(false);
-      
-      // Add regions after waveform is ready
-      annotations.forEach((annotation) => {
-        const region = regions.addRegion({
-          start: annotation.start,
-          end: annotation.end,
-          color: annotation.color + '40', // Add transparency
-          content: annotation.label,
-        });
+        audioRef.current.addEventListener('loadeddata', handleLoadedData);
+        audioRef.current.addEventListener('error', handleError);
+        audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+        audioRef.current.addEventListener('play', handlePlay);
+        audioRef.current.addEventListener('pause', handlePause);
 
-        // Add click listener to regions
-        region.on('click', () => {
-          setSelectedRegion(annotation);
-          wavesurfer.seekTo(annotation.start / wavesurfer.getDuration());
-        });
-      });
-    });
-
-    wavesurfer.on('play', () => setIsPlaying(true));
-    wavesurfer.on('pause', () => setIsPlaying(false));
-
-    // Listen for timeline events to seek audio
-    const handleTimelineEvent = (event: CustomEvent) => {
-      const timelineEvent = event.detail.event;
-      // Map timeline events to approximate audio regions
-      if (timelineEvent.title.includes('Single Released')) {
-        wavesurfer.seekTo(0); // Go to beginning for release events
-      } else if (timelineEvent.title.includes('Solo')) {
-        const soloRegion = annotations.find(r => r.label.includes('Solo'));
-        if (soloRegion) {
-          wavesurfer.seekTo(soloRegion.start / wavesurfer.getDuration());
+        // Try to load the audio
+        try {
+          await audioRef.current.load();
+        } catch (error) {
+          console.error('Failed to load audio:', error);
+          setAudioError('Failed to load audio file');
+          setIsLoading(false);
         }
+
+        return () => {
+          if (audioRef.current) {
+            audioRef.current.removeEventListener('loadeddata', handleLoadedData);
+            audioRef.current.removeEventListener('error', handleError);
+            audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+            audioRef.current.removeEventListener('play', handlePlay);
+            audioRef.current.removeEventListener('pause', handlePause);
+          }
+        };
       }
     };
 
-    window.addEventListener('timeline-event-selected', handleTimelineEvent as EventListener);
-
-    return () => {
-      window.removeEventListener('timeline-event-selected', handleTimelineEvent as EventListener);
-      wavesurfer.destroy();
-    };
-  }, [audioUrl, annotations]);
+    initializeAudio();
+  }, [audioUrl]);
 
   const togglePlayPause = () => {
-    if (wavesurferRef.current) {
-      wavesurferRef.current.playPause();
+    if (audioRef.current && !audioError) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(error => {
+          console.error('Play failed:', error);
+          setAudioError('Failed to play audio');
+        });
+      }
     }
+  };
+
+  const seekToTime = (time: number) => {
+    if (audioRef.current && !audioError) {
+      audioRef.current.currentTime = time;
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -102,7 +112,7 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
       <CardHeader>
         <CardTitle className="text-paranoid-orange">Paranoid Audio Analysis</CardTitle>
         <p className="text-paranoid-white text-sm">
-          Click regions on the waveform to explore song structure
+          {audioError ? 'Audio player unavailable' : 'Click regions below to explore song structure'}
         </p>
       </CardHeader>
       <CardContent>
@@ -126,57 +136,99 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
             {/* Play/Pause Button */}
             <button
               onClick={togglePlayPause}
-              disabled={isLoading}
+              disabled={isLoading || !!audioError}
               className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-paranoid-orange hover:bg-paranoid-orange-light text-paranoid-black flex items-center justify-center font-bold disabled:opacity-50 transition-colors"
             >
-              {isLoading ? '...' : isPlaying ? '⏸' : '▶'}
+              {isLoading ? '...' : audioError ? '!' : isPlaying ? '⏸' : '▶'}
             </button>
           </div>
           
-          {/* Waveform */}
+          {/* Audio Controls or Error Display */}
           <div className="flex-1">
-            <div ref={waveformRef} className="border border-paranoid-orange rounded"></div>
+            {audioError ? (
+              <div className="border border-red-500 rounded p-4 bg-red-900 bg-opacity-20">
+                <h4 className="text-red-400 font-semibold mb-2">Audio Unavailable</h4>
+                <p className="text-paranoid-white text-sm mb-2">{audioError}</p>
+                <p className="text-paranoid-white text-xs opacity-70">
+                  Audio file path: <code>{audioUrl}</code>
+                </p>
+                <p className="text-paranoid-white text-xs opacity-70 mt-1">
+                  Expected location: <code>public/audio/paranoid.mp3</code>
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-paranoid-white text-sm font-mono">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{formatTime(duration)}</span>
+                  </div>
+                  <div className="w-full bg-paranoid-black rounded-full h-2 border border-paranoid-orange">
+                    <div 
+                      className="bg-paranoid-orange h-2 rounded-full transition-all duration-100"
+                      style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Hidden HTML5 Audio Element */}
+                <audio
+                  ref={audioRef}
+                  preload="metadata"
+                  className="hidden"
+                />
+              </div>
+            )}
             
             {/* Selected region details */}
-            {selectedRegion && (
+            {selectedRegion && !audioError && (
               <div className="mt-4 p-4 bg-paranoid-black border border-paranoid-orange rounded">
-                <h4 className="text-paranoid-orange font-semibold mb-2">
+                <h4 className="text-paranoid-orange font-semibold mb-2 text-lg">
                   {selectedRegion.label}
                 </h4>
-                <p className="text-paranoid-white text-sm mb-2">
+                <p className="text-paranoid-white text-sm mb-3 font-mono">
                   {selectedRegion.start.toFixed(1)}s - {selectedRegion.end.toFixed(1)}s
                 </p>
                 {selectedRegion.description && (
-                  <p className="text-paranoid-white text-sm leading-relaxed">
-                    {selectedRegion.description}
-                  </p>
+                  <div className="text-paranoid-white text-sm leading-relaxed">
+                    <p className="mb-2 text-paranoid-orange-light font-semibold">Technical Analysis:</p>
+                    <p className="pl-2 border-l-2 border-paranoid-orange-light">
+                      {selectedRegion.description}
+                    </p>
+                  </div>
                 )}
               </div>
             )}
             
             {/* Region overview */}
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {annotations.map((annotation, index) => (
                 <button
                   key={index}
                   onClick={() => {
                     setSelectedRegion(annotation);
-                    if (wavesurferRef.current) {
-                      wavesurferRef.current.seekTo(annotation.start / wavesurferRef.current.getDuration());
+                    if (!audioError) {
+                      seekToTime(annotation.start);
                     }
                   }}
-                  className={`text-xs p-2 border border-paranoid-orange rounded transition-colors ${
+                  disabled={!!audioError}
+                  className={`text-xs p-3 border border-paranoid-orange rounded transition-colors disabled:opacity-50 text-left ${
                     selectedRegion?.label === annotation.label 
                       ? 'bg-paranoid-orange text-paranoid-black' 
                       : 'bg-paranoid-black hover:bg-paranoid-gray-light'
                   }`}
                 >
-                  <div className="font-semibold">
+                  <div className="font-semibold mb-1">
                     {annotation.label}
                   </div>
-                  <div className="text-xs opacity-70">
+                  <div className="text-xs opacity-70 font-mono">
                     {annotation.start.toFixed(1)}s - {annotation.end.toFixed(1)}s
                   </div>
+                  <div 
+                    className="w-full h-1 mt-2 rounded"
+                    style={{ backgroundColor: annotation.color }}
+                  ></div>
                 </button>
               ))}
             </div>

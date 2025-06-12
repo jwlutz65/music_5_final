@@ -49,16 +49,25 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Paranoid album cover theme
-        paranoid: {
-          black: '#0a0a0a',
-          orange: '#ff4500',
-          'orange-dark': '#cc3700',
-          'orange-light': '#ff6b33',
-          white: '#ffffff',
-          'gray-dark': '#1a1a1a',
-          'gray-light': '#333333',
-        }
+        // Original Paranoid theme colors
+        'paranoid-black': '#0a0a0a',
+        'paranoid-gray-dark': '#1a1a1a',
+        'paranoid-gray-light': '#2a2a2a',
+        'paranoid-white': '#ffffff',
+        
+        // Album cover inspired colors - more variety
+        'paranoid-orange': '#ff4500',
+        'paranoid-orange-light': '#ff6500',
+        'paranoid-red': '#dc2626',
+        'paranoid-pink': '#ec4899',
+        'paranoid-purple': '#8b5cf6',
+        'paranoid-blue': '#3b82f6',
+        'paranoid-indigo': '#6366f1',
+        
+        // Earth tones from album cover
+        'paranoid-brown': '#8B4513',
+        'paranoid-rust': '#B7410E',
+        'paranoid-copper': '#B87333',
       },
       borderRadius: {
         lg: "var(--radius)",

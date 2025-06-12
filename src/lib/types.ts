@@ -76,8 +76,10 @@ export interface TimelineEvent {
 export interface GameStat {
   /** Year of the statistic */
   year: number;
+  /** Quarter of the year (optional for quarterly data) */
+  quarter?: string;
   /** Game name */
   game: string;
-  /** Play count for that year */
+  /** Play count for that year/quarter */
   playCount: number;
 } 

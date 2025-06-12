@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from './firebase';
 import { ResearchData } from './types';
+import { researchData as dataSeed } from './dataSeed';
 
 /**
- * Custom hook to fetch research data from Firestore
+ * Custom hook to fetch research data from local data seed
  * @returns Object containing data, loading state, and error state
  */
 export const useResearchData = () => {
@@ -13,29 +12,25 @@ export const useResearchData = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    // Simulate async loading for consistency
+    const loadData = async () => {
       try {
         setLoading(true);
         setError(null);
         
-        const docRef = doc(db, 'researchData', 'main');
-        const docSnap = await getDoc(docRef);
+        // Small delay to simulate loading
+        await new Promise(resolve => setTimeout(resolve, 100));
         
-        if (docSnap.exists()) {
-          const researchData = docSnap.data() as ResearchData;
-          setData(researchData);
-        } else {
-          setError('Research data not found');
-        }
+        setData(dataSeed);
       } catch (err) {
-        console.error('Error fetching research data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch data');
+        console.error('Error loading research data:', err);
+        setError('Failed to load research data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    loadData();
   }, []);
 
   return { data, loading, error };
