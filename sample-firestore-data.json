@@ -1,0 +1,72 @@
+{
+  "audioUrl": "https://archive.org/download/BlackSabbath_Paranoid/01-paranoid.mp3",
+  "nodes": [
+    { "id": "Paranoid", "label": "Black Sabbath – Paranoid", "group": 1 },
+    { "id": "Industrial Birmingham", "label": "Post-war Birmingham", "group": 2 },
+    { "id": "Heavy Metal Genesis", "label": "Heavy Metal Origins", "group": 3 },
+    { "id": "Ozzy Osbourne", "label": "Ozzy Osbourne", "group": 1 },
+    { "id": "Tony Iommi", "label": "Tony Iommi", "group": 1 },
+    { "id": "Geezer Butler", "label": "Geezer Butler", "group": 1 },
+    { "id": "Bill Ward", "label": "Bill Ward", "group": 1 },
+    { "id": "Blues Rock", "label": "Blues Rock Influence", "group": 4 },
+    { "id": "Psychedelic Rock", "label": "Psychedelic Era", "group": 4 },
+    { "id": "Hard Rock", "label": "Hard Rock Movement", "group": 3 }
+  ],
+  "links": [
+    { "source": "Industrial Birmingham", "target": "Paranoid", "strength": 0.9 },
+    { "source": "Heavy Metal Genesis", "target": "Paranoid", "strength": 1.0 },
+    { "source": "Ozzy Osbourne", "target": "Paranoid", "strength": 0.8 },
+    { "source": "Tony Iommi", "target": "Paranoid", "strength": 0.9 },
+    { "source": "Geezer Butler", "target": "Paranoid", "strength": 0.7 },
+    { "source": "Bill Ward", "target": "Paranoid", "strength": 0.7 },
+    { "source": "Blues Rock", "target": "Heavy Metal Genesis", "strength": 0.6 },
+    { "source": "Psychedelic Rock", "target": "Heavy Metal Genesis", "strength": 0.5 },
+    { "source": "Hard Rock", "target": "Heavy Metal Genesis", "strength": 0.8 },
+    { "source": "Tony Iommi", "target": "Heavy Metal Genesis", "strength": 0.9 }
+  ],
+  "waveRegions": [
+    { "start": 0, "end": 14, "label": "Iconic Opening Riff", "color": "#FF6500" },
+    { "start": 14, "end": 45, "label": "First Verse - Paranoia Lyrics", "color": "#FF4500" },
+    { "start": 45, "end": 76, "label": "Guitar Solo Section", "color": "#CC3700" },
+    { "start": 76, "end": 107, "label": "Second Verse", "color": "#FF4500" },
+    { "start": 107, "end": 138, "label": "Final Chorus & Outro", "color": "#FF6500" }
+  ],
+  "timelineEvents": [
+    { 
+      "time": "1970-08-07", 
+      "title": "Single Released", 
+      "description": "Paranoid single released, reaching #4 on UK charts and defining heavy metal sound" 
+    },
+    { 
+      "time": "1970-09-18", 
+      "title": "Album Released", 
+      "description": "Paranoid album released, becoming one of the most influential heavy metal albums ever" 
+    },
+    { 
+      "time": "1971", 
+      "title": "Global Recognition", 
+      "description": "International success establishes Black Sabbath as heavy metal pioneers" 
+    },
+    { 
+      "time": "1980s", 
+      "title": "Genre Foundation", 
+      "description": "Paranoid becomes template for countless metal bands and subgenres" 
+    },
+    { 
+      "time": "2000s", 
+      "title": "Gaming Culture", 
+      "description": "Track gains new life through video game soundtracks and streaming" 
+    }
+  ],
+  "gameStats": [
+    { "year": 2015, "game": "Helldivers", "playCount": 85000 },
+    { "year": 2016, "game": "Helldivers", "playCount": 120000 },
+    { "year": 2017, "game": "Helldivers", "playCount": 98000 },
+    { "year": 2018, "game": "Helldivers", "playCount": 156000 },
+    { "year": 2019, "game": "Helldivers", "playCount": 203000 },
+    { "year": 2020, "game": "Helldivers", "playCount": 287000 },
+    { "year": 2021, "game": "Helldivers", "playCount": 312000 },
+    { "year": 2022, "game": "Helldivers", "playCount": 298000 },
+    { "year": 2023, "game": "Helldivers", "playCount": 445000 }
+  ]
+} 
