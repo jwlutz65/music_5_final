@@ -26,6 +26,8 @@ export interface GraphNode {
   label: string;
   /** Group/category for styling and clustering */
   group: number;
+  /** Detailed information about the node for side panel display */
+  details?: string;
 }
 
 /**
@@ -52,6 +54,8 @@ export interface WaveRegion {
   label: string;
   /** Color for the region */
   color: string;
+  /** Optional detailed description of the region */
+  description?: string;
 }
 
 /**

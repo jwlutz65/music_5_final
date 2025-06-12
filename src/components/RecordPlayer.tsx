@@ -13,7 +13,7 @@ interface RecordPlayerProps {
 
 /**
  * RecordPlayer component combines WaveSurfer waveform with a stylized vinyl record animation
- * Features clickable regions, play/pause controls, and custom styling
+ * Features clickable regions, play/pause controls, and detailed region descriptions
  */
 export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotations }) => {
   const waveformRef = useRef<HTMLDivElement>(null);
@@ -21,6 +21,7 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
   const regionsRef = useRef<RegionsPlugin | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState<WaveRegion | null>(null);
 
   useEffect(() => {
     if (!waveformRef.current) return;
@@ -34,7 +35,6 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
       container: waveformRef.current,
       waveColor: '#ff4500',
       progressColor: '#cc3700',
-      backgroundColor: '#0a0a0a',
       height: 100,
       normalize: true,
       plugins: [regions],
@@ -51,11 +51,17 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
       
       // Add regions after waveform is ready
       annotations.forEach((annotation) => {
-        regions.addRegion({
+        const region = regions.addRegion({
           start: annotation.start,
           end: annotation.end,
           color: annotation.color + '40', // Add transparency
           content: annotation.label,
+        });
+
+        // Add click listener to regions
+        region.on('click', () => {
+          setSelectedRegion(annotation);
+          wavesurfer.seekTo(annotation.start / wavesurfer.getDuration());
         });
       });
     });
@@ -63,10 +69,18 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
     wavesurfer.on('play', () => setIsPlaying(true));
     wavesurfer.on('pause', () => setIsPlaying(false));
 
-    // Listen for timeline events
+    // Listen for timeline events to seek audio
     const handleTimelineEvent = (event: CustomEvent) => {
-      // Could seek to specific time based on timeline event
-      console.log('Timeline event received:', event.detail);
+      const timelineEvent = event.detail.event;
+      // Map timeline events to approximate audio regions
+      if (timelineEvent.title.includes('Single Released')) {
+        wavesurfer.seekTo(0); // Go to beginning for release events
+      } else if (timelineEvent.title.includes('Solo')) {
+        const soloRegion = annotations.find(r => r.label.includes('Solo'));
+        if (soloRegion) {
+          wavesurfer.seekTo(soloRegion.start / wavesurfer.getDuration());
+        }
+      }
     };
 
     window.addEventListener('timeline-event-selected', handleTimelineEvent as EventListener);
@@ -87,6 +101,9 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
     <Card className="bg-paranoid-gray-dark border-paranoid-orange">
       <CardHeader>
         <CardTitle className="text-paranoid-orange">Paranoid Audio Analysis</CardTitle>
+        <p className="text-paranoid-white text-sm">
+          Click regions on the waveform to explore song structure
+        </p>
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-6">
@@ -120,20 +137,47 @@ export const RecordPlayer: React.FC<RecordPlayerProps> = ({ audioUrl, annotation
           <div className="flex-1">
             <div ref={waveformRef} className="border border-paranoid-orange rounded"></div>
             
-            {/* Region tooltips info */}
-            <div className="mt-4 grid grid-cols-2 gap-2">
+            {/* Selected region details */}
+            {selectedRegion && (
+              <div className="mt-4 p-4 bg-paranoid-black border border-paranoid-orange rounded">
+                <h4 className="text-paranoid-orange font-semibold mb-2">
+                  {selectedRegion.label}
+                </h4>
+                <p className="text-paranoid-white text-sm mb-2">
+                  {selectedRegion.start.toFixed(1)}s - {selectedRegion.end.toFixed(1)}s
+                </p>
+                {selectedRegion.description && (
+                  <p className="text-paranoid-white text-sm leading-relaxed">
+                    {selectedRegion.description}
+                  </p>
+                )}
+              </div>
+            )}
+            
+            {/* Region overview */}
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
               {annotations.map((annotation, index) => (
-                <div
+                <button
                   key={index}
-                  className="text-xs p-2 bg-paranoid-black border border-paranoid-orange rounded"
+                  onClick={() => {
+                    setSelectedRegion(annotation);
+                    if (wavesurferRef.current) {
+                      wavesurferRef.current.seekTo(annotation.start / wavesurferRef.current.getDuration());
+                    }
+                  }}
+                  className={`text-xs p-2 border border-paranoid-orange rounded transition-colors ${
+                    selectedRegion?.label === annotation.label 
+                      ? 'bg-paranoid-orange text-paranoid-black' 
+                      : 'bg-paranoid-black hover:bg-paranoid-gray-light'
+                  }`}
                 >
-                  <div className="text-paranoid-orange font-semibold">
+                  <div className="font-semibold">
                     {annotation.label}
                   </div>
-                  <div className="text-paranoid-white">
+                  <div className="text-xs opacity-70">
                     {annotation.start.toFixed(1)}s - {annotation.end.toFixed(1)}s
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>

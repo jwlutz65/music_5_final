@@ -1,0 +1,212 @@
+{
+  "audioUrl": "https://archive.org/download/BlackSabbath_Paranoid/01-paranoid.mp3",
+  "nodes": [
+    {
+      "id": "Paranoid",
+      "label": "Paranoid (1970)",
+      "group": 1,
+      "details": "Black Sabbath's defining single, written hastily to fill album space, became their signature song reaching #4 UK charts and establishing the heavy metal template."
+    },
+    {
+      "id": "Black Sabbath",
+      "label": "Black Sabbath",
+      "group": 1,
+      "details": "Birmingham working-class band formed in 1968, originally named Earth, pioneered heavy metal with darker themes and down-tuned guitars."
+    },
+    {
+      "id": "Ozzy Osbourne",
+      "label": "Ozzy Osbourne",
+      "group": 1,
+      "details": "Lead vocalist whose paranoia-laden lyrics and distinctive voice became metal's first iconic frontman persona."
+    },
+    {
+      "id": "Tony Iommi",
+      "label": "Tony Iommi",
+      "group": 1,
+      "details": "Guitarist who lost fingertips in industrial accident, developed heavy, down-tuned style that defined metal guitar sound."
+    },
+    {
+      "id": "Geezer Butler",
+      "label": "Geezer Butler",
+      "group": 1,
+      "details": "Bassist and primary lyricist, wrote Paranoid's lyrics about mental health struggles and societal alienation."
+    },
+    {
+      "id": "Bill Ward",
+      "label": "Bill Ward",
+      "group": 1,
+      "details": "Drummer whose jazz-influenced style and powerful playing anchored Sabbath's revolutionary rhythm section."
+    },
+    {
+      "id": "Industrial Birmingham",
+      "label": "Post-war Birmingham",
+      "group": 2,
+      "details": "Declining industrial city where factory workers' sons channeled economic despair into heavy, dystopian music reflecting working-class reality."
+    },
+    {
+      "id": "Vietnam War",
+      "label": "Vietnam War Era",
+      "group": 2,
+      "details": "Anti-war sentiment and social unrest of 1970 directly influenced Paranoid's themes of paranoia and societal breakdown."
+    },
+    {
+      "id": "Cold War Paranoia",
+      "label": "Cold War Paranoia",
+      "group": 2,
+      "details": "Nuclear anxiety and social surveillance fears of the early 1970s permeated the album's psychological themes."
+    },
+    {
+      "id": "Blues Rock",
+      "label": "Blues Rock Foundation",
+      "group": 3,
+      "details": "Traditional blues progressions and pentatonic scales formed the structural foundation beneath Sabbath's heavier approach."
+    },
+    {
+      "id": "Psychedelic Rock",
+      "label": "Psychedelic Movement",
+      "group": 3,
+      "details": "Late-60s psychedelia's experimental approach and darker themes influenced Sabbath's sonic exploration."
+    },
+    {
+      "id": "Cream",
+      "label": "Cream",
+      "group": 3,
+      "details": "Power trio format and blues-rock intensity directly influenced Black Sabbath's early sound and arrangement approach."
+    },
+    {
+      "id": "Led Zeppelin",
+      "label": "Led Zeppelin",
+      "group": 3,
+      "details": "Contemporary heavy blues rock that shared Birmingham origins and influenced Sabbath's dynamic range and mystical themes."
+    },
+    {
+      "id": "Heavy Metal Genesis",
+      "label": "Heavy Metal Origins",
+      "group": 4,
+      "details": "Paranoid established the sonic template for heavy metal: down-tuned guitars, occult imagery, and working-class rebellion."
+    },
+    {
+      "id": "NWOBHM",
+      "label": "New Wave of British Heavy Metal",
+      "group": 4,
+      "details": "1970s-80s British metal movement that drew directly from Sabbath's blueprint, spreading metal globally."
+    },
+    {
+      "id": "Doom Metal",
+      "label": "Doom Metal",
+      "group": 4,
+      "details": "Subgenre that emerged from Sabbath's slower, heavier tracks, emphasizing atmosphere and psychological weight."
+    },
+    {
+      "id": "Gaming Culture",
+      "label": "Gaming Soundtrack",
+      "group": 5,
+      "details": "Paranoid found new life in video game soundtracks, particularly tactical games where its intensity enhances gameplay."
+    }
+  ],
+  "links": [
+    { "source": "Black Sabbath", "target": "Paranoid", "strength": 1.0 },
+    { "source": "Ozzy Osbourne", "target": "Paranoid", "strength": 0.9 },
+    { "source": "Tony Iommi", "target": "Paranoid", "strength": 0.9 },
+    { "source": "Geezer Butler", "target": "Paranoid", "strength": 0.8 },
+    { "source": "Bill Ward", "target": "Paranoid", "strength": 0.8 },
+    { "source": "Industrial Birmingham", "target": "Paranoid", "strength": 0.9 },
+    { "source": "Vietnam War", "target": "Paranoid", "strength": 0.7 },
+    { "source": "Cold War Paranoia", "target": "Paranoid", "strength": 0.8 },
+    { "source": "Blues Rock", "target": "Black Sabbath", "strength": 0.8 },
+    { "source": "Psychedelic Rock", "target": "Black Sabbath", "strength": 0.6 },
+    { "source": "Cream", "target": "Black Sabbath", "strength": 0.7 },
+    { "source": "Led Zeppelin", "target": "Black Sabbath", "strength": 0.6 },
+    { "source": "Paranoid", "target": "Heavy Metal Genesis", "strength": 1.0 },
+    { "source": "Heavy Metal Genesis", "target": "NWOBHM", "strength": 0.9 },
+    { "source": "Heavy Metal Genesis", "target": "Doom Metal", "strength": 0.8 },
+    { "source": "Paranoid", "target": "Gaming Culture", "strength": 0.6 },
+    { "source": "Tony Iommi", "target": "Heavy Metal Genesis", "strength": 0.9 },
+    { "source": "Industrial Birmingham", "target": "Heavy Metal Genesis", "strength": 0.7 }
+  ],
+  "timelineEvents": [
+    {
+      "time": "1970-08-07",
+      "title": "UK Single Released",
+      "description": "Paranoid single released in the UK, reaching #4 on the charts. Written in 20 minutes to fill album space, it became their biggest hit and defined heavy metal's sound template."
+    },
+    {
+      "time": "1970-09-18",
+      "title": "Paranoid Album Released",
+      "description": "The complete Paranoid album released, featuring War Pigs, Iron Man, and the title track. Recorded at Regent Sound Studios for £500, it would sell millions and influence generations."
+    },
+    {
+      "time": "1971-01-07",
+      "title": "US Single Released",
+      "description": "Paranoid released in the United States, reaching #61 on Billboard Hot 100. American radio initially resisted the heavy sound, but underground popularity grew rapidly."
+    },
+    {
+      "time": "1970-08",
+      "title": "Album Title Controversy",
+      "description": "Originally titled 'War Pigs' after the opening track, Vertigo Records demanded a title change due to Vietnam War sensitivity. The hastily-written Paranoid became both title track and biggest hit."
+    },
+    {
+      "time": "1975-1985",
+      "title": "NWOBHM Movement",
+      "description": "New Wave of British Heavy Metal bands like Iron Maiden, Saxon, and Diamond Head cite Paranoid as foundational influence, spreading heavy metal globally and establishing it as legitimate genre."
+    },
+    {
+      "time": "1990s",
+      "title": "Grunge Recognition",
+      "description": "Grunge pioneers acknowledge Sabbath's influence. Kurt Cobain and others cite Paranoid's raw emotion and working-class themes as precursor to alternative rock's authenticity."
+    },
+    {
+      "time": "2000s-Present",
+      "title": "Gaming Culture Integration",
+      "description": "Paranoid gains new audiences through video game soundtracks, particularly in tactical shooters like Helldivers where its intensity enhances cooperative gameplay experiences."
+    }
+  ],
+  "waveRegions": [
+    {
+      "start": 0,
+      "end": 14,
+      "label": "Iconic Opening Riff",
+      "color": "#FF6500",
+      "description": "The instantly recognizable main riff that established heavy metal's signature sound - simple, powerful, and unforgettable."
+    },
+    {
+      "start": 14,
+      "end": 45,
+      "label": "First Verse - Paranoia Lyrics",
+      "color": "#FF4500",
+      "description": "Ozzy's vocals enter with Geezer Butler's lyrics about mental health struggles and social alienation, themes revolutionary for rock music."
+    },
+    {
+      "start": 45,
+      "end": 76,
+      "label": "Guitar Solo Section",
+      "color": "#CC3700",
+      "description": "Tony Iommi's guitar solo showcases the heavy, sustained tone that would influence metal guitar playing for decades."
+    },
+    {
+      "start": 76,
+      "end": 107,
+      "label": "Second Verse & Bridge",
+      "color": "#FF4500",
+      "description": "The song builds intensity as lyrics delve deeper into paranoid psychology, backed by Bill Ward's driving rhythm."
+    },
+    {
+      "start": 107,
+      "end": 138,
+      "label": "Final Chorus & Outro",
+      "color": "#FF6500",
+      "description": "The concluding section that leaves listeners with the unforgettable riff, cementing its place in rock history."
+    }
+  ],
+  "gameStats": [
+    { "year": 2015, "game": "Helldivers", "playCount": 85000 },
+    { "year": 2016, "game": "Helldivers", "playCount": 120000 },
+    { "year": 2017, "game": "Helldivers", "playCount": 98000 },
+    { "year": 2018, "game": "Helldivers", "playCount": 156000 },
+    { "year": 2019, "game": "Helldivers", "playCount": 203000 },
+    { "year": 2020, "game": "Helldivers", "playCount": 287000 },
+    { "year": 2021, "game": "Helldivers", "playCount": 312000 },
+    { "year": 2022, "game": "Helldivers", "playCount": 298000 },
+    { "year": 2023, "game": "Helldivers", "playCount": 445000 }
+  ]
+} 

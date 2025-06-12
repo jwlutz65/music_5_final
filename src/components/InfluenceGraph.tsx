@@ -12,7 +12,6 @@ interface InfluenceGraphProps {
 
 interface NodeDetail {
   node: GraphNode;
-  historicalContext: string;
 }
 
 /**
@@ -61,14 +60,15 @@ export const InfluenceGraph: React.FC<InfluenceGraphProps> = ({ nodes, links }) 
       .style('stroke-opacity', 0.6)
       .style('stroke-width', (d: any) => Math.sqrt(d.strength) * 2);
 
-    // Create nodes
+    // Create nodes with color based on group
+    const groupColors = ['#ff4500', '#ff6500', '#cc3700', '#ff8533', '#994400', '#ffaa66'];
     const node = g.append('g')
       .selectAll('circle')
       .data(nodes)
       .enter().append('circle')
       .attr('class', 'node')
       .attr('r', 8)
-      .style('fill', (d: any) => d3.schemeCategory10[d.group])
+      .style('fill', (d: any) => groupColors[d.group % groupColors.length])
       .style('stroke', '#fff')
       .style('stroke-width', 2)
       .style('cursor', 'pointer')
@@ -126,10 +126,7 @@ export const InfluenceGraph: React.FC<InfluenceGraphProps> = ({ nodes, links }) 
             .call(zoom.transform as any, newTransform);
         } else if (newCount === 2) {
           // Second click: open side panel
-          setSelectedNode({
-            node: d,
-            historicalContext: generateHistoricalContext(d)
-          });
+          setSelectedNode({ node: d });
           setClickCount(prev => ({ ...prev, [d.id]: 0 }));
         }
       });
@@ -173,16 +170,14 @@ export const InfluenceGraph: React.FC<InfluenceGraphProps> = ({ nodes, links }) 
     };
   }, [nodes, links, clickCount]);
 
-  const generateHistoricalContext = (node: GraphNode): string => {
-    // Generate contextual information based on node data
-    return `Historical context for ${node.label} (Group ${node.group}): This node represents a significant influence in the Paranoid research network, connecting various musical and cultural elements that shaped the album's creation.`;
-  };
-
   return (
     <div className="flex gap-4">
       <Card className="flex-1 bg-paranoid-gray-dark border-paranoid-orange">
         <CardHeader>
           <CardTitle className="text-paranoid-orange">Influence Network</CardTitle>
+          <p className="text-paranoid-white text-sm">
+            Click nodes to zoom, double-click for detailed information
+          </p>
         </CardHeader>
         <CardContent>
           <svg
@@ -197,24 +192,41 @@ export const InfluenceGraph: React.FC<InfluenceGraphProps> = ({ nodes, links }) 
       </Card>
       
       {selectedNode && (
-        <Card className="w-80 bg-paranoid-gray-dark border-paranoid-orange">
+        <Card className="w-96 bg-paranoid-gray-dark border-paranoid-orange">
           <CardHeader>
             <CardTitle className="text-paranoid-orange">{selectedNode.node.label}</CardTitle>
             <button
               onClick={() => setSelectedNode(null)}
-              className="text-paranoid-white hover:text-paranoid-orange absolute top-4 right-4"
+              className="text-paranoid-white hover:text-paranoid-orange absolute top-4 right-4 text-xl"
             >
               ×
             </button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
-              <p className="text-paranoid-white text-sm">
-                <strong>Group:</strong> {selectedNode.node.group}
-              </p>
-              <p className="text-paranoid-white text-sm">
-                {selectedNode.historicalContext}
-              </p>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-4 h-4 rounded-full" 
+                  style={{ 
+                    backgroundColor: ['#ff4500', '#ff6500', '#cc3700', '#ff8533', '#994400', '#ffaa66'][selectedNode.node.group % 6] 
+                  }}
+                ></div>
+                <span className="text-paranoid-white text-sm">
+                  Group {selectedNode.node.group}
+                </span>
+              </div>
+              
+              {selectedNode.node.details && (
+                <div className="bg-paranoid-black p-4 rounded border border-paranoid-orange">
+                  <p className="text-paranoid-white text-sm leading-relaxed">
+                    {selectedNode.node.details}
+                  </p>
+                </div>
+              )}
+              
+              <div className="text-xs text-paranoid-white opacity-70">
+                Historical & Cultural Context
+              </div>
             </div>
           </CardContent>
         </Card>
